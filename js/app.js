@@ -19,18 +19,9 @@ const db = firebase.database();
 
 // ─── Constants ─────────────────────────────────────────────
 const PASSWORD = "OLE";
-const CORS_PROXIES = [
-  "https://api.allorigins.win/raw?url=",
-  "https://corsproxy.io/?",
-  "https://cors-anywhere.herokuapp.com/"
-];
-let corsProxyIndex = 0;
-const BGG_SEARCH_URL = "https://boardgamegeek.com/xmlapi2/search";
-const BGG_THING_URL = "https://boardgamegeek.com/xmlapi2/thing";
 
 // ─── State ─────────────────────────────────────────────────
 let currentUser = localStorage.getItem("gamenight_user") || "";
-let selectedBggGame = null;
 let editingSessionId = null;
 
 // ─── DOM References ────────────────────────────────────────
@@ -58,11 +49,11 @@ const cancelSessionBtn = document.getElementById("cancelSessionBtn");
 // Game form
 const addGameBtn = document.getElementById("addGameBtn");
 const addGameForm = document.getElementById("addGameForm");
-const bggSearchInput = document.getElementById("bggSearchInput");
-const bggSearchBtn = document.getElementById("bggSearchBtn");
-const bggResults = document.getElementById("bggResults");
-const gameDetails = document.getElementById("gameDetails");
-const gamePreview = document.getElementById("gamePreview");
+const gameName = document.getElementById("gameName");
+const gameMinPlayers = document.getElementById("gameMinPlayers");
+const gameMaxPlayers = document.getElementById("gameMaxPlayers");
+const gamePlayTime = document.getElementById("gamePlayTime");
+const gameBggUrl = document.getElementById("gameBggUrl");
 const gameOwner = document.getElementById("gameOwner");
 const saveGameBtn = document.getElementById("saveGameBtn");
 const cancelGameBtn = document.getElementById("cancelGameBtn");
@@ -331,140 +322,35 @@ cancelEditSessionBtn.addEventListener("click", () => {
 // ─── Games ─────────────────────────────────────────────────
 addGameBtn.addEventListener("click", () => {
   addGameForm.classList.toggle("hidden");
-  bggResults.classList.add("hidden");
-  gameDetails.classList.add("hidden");
   gameOwner.value = currentUser;
 });
 
 cancelGameBtn.addEventListener("click", () => {
   addGameForm.classList.add("hidden");
-  selectedBggGame = null;
 });
-
-// BGG Search
-bggSearchBtn.addEventListener("click", searchBGG);
-bggSearchInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") searchBGG();
-});
-
-async function fetchWithProxy(targetUrl) {
-  for (let i = 0; i < CORS_PROXIES.length; i++) {
-    const proxy = CORS_PROXIES[(corsProxyIndex + i) % CORS_PROXIES.length];
-    try {
-      const resp = await fetch(proxy + encodeURIComponent(targetUrl));
-      if (resp.ok) {
-        corsProxyIndex = (corsProxyIndex + i) % CORS_PROXIES.length;
-        return await resp.text();
-      }
-    } catch (e) { /* try next */ }
-  }
-  throw new Error("All proxies failed");
-}
-
-async function searchBGG() {
-  const query = bggSearchInput.value.trim();
-  if (!query) return;
-
-  bggResults.innerHTML = '<span class="spinner"></span> Searching...';
-  bggResults.classList.remove("hidden");
-  gameDetails.classList.add("hidden");
-
-  try {
-    const targetUrl = BGG_SEARCH_URL + "?query=" + encodeURIComponent(query) + "&type=boardgame";
-    const text = await fetchWithProxy(targetUrl);
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(text, "text/xml");
-    const items = xml.querySelectorAll("item");
-
-    if (items.length === 0) {
-      bggResults.innerHTML = '<p style="color:#888;padding:.5rem">No results found.</p>';
-      return;
-    }
-
-    // Show top 10 results
-    const results = Array.from(items).slice(0, 10);
-    bggResults.innerHTML = results.map(item => {
-      const id = item.getAttribute("id");
-      const name = item.querySelector('name[type="primary"]')?.getAttribute("value") || item.querySelector("name")?.getAttribute("value") || "Unknown";
-      const year = item.querySelector("yearpublished")?.getAttribute("value") || "";
-      return `
-        <div class="bgg-result-item" onclick="selectBggGame('${id}')">
-          <div>
-            <div class="bgg-result-name">${escapeHtml(name)}</div>
-            ${year ? `<div class="bgg-result-year">${year}</div>` : ''}
-          </div>
-        </div>`;
-    }).join("");
-  } catch (err) {
-    bggResults.innerHTML = '<p style="color:#e94560;padding:.5rem">Search failed. Try again.</p>';
-  }
-}
-
-window.selectBggGame = async function(bggId) {
-  bggResults.innerHTML = '<span class="spinner"></span> Loading game details...';
-
-  try {
-    const targetUrl = BGG_THING_URL + "?id=" + bggId + "&stats=1";
-    const text = await fetchWithProxy(targetUrl);
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(text, "text/xml");
-    const item = xml.querySelector("item");
-
-    if (!item) {
-      bggResults.innerHTML = '<p style="color:#e94560">Could not load game details.</p>';
-      return;
-    }
-
-    const name = item.querySelector('name[type="primary"]')?.getAttribute("value") || "Unknown";
-    const image = item.querySelector("thumbnail")?.textContent || "";
-    const minPlayers = item.querySelector("minplayers")?.getAttribute("value") || "?";
-    const maxPlayers = item.querySelector("maxplayers")?.getAttribute("value") || "?";
-    const playingTime = item.querySelector("playingtime")?.getAttribute("value") || "?";
-    const bggUrl = `https://boardgamegeek.com/boardgame/${bggId}`;
-
-    selectedBggGame = { name, image, minPlayers, maxPlayers, playingTime, bggId, bggUrl };
-
-    bggResults.classList.add("hidden");
-    gameDetails.classList.remove("hidden");
-    gamePreview.innerHTML = `
-      <div class="game-preview-card">
-        ${image ? `<img src="${image}" alt="${escapeHtml(name)}">` : ''}
-        <div class="game-preview-info">
-          <h4>${escapeHtml(name)}</h4>
-          <p>👥 ${minPlayers}–${maxPlayers} players</p>
-          <p>⏱ ${playingTime} min</p>
-          <p><a href="${bggUrl}" target="_blank" style="color:#e94560">View on BGG ↗</a></p>
-        </div>
-      </div>`;
-  } catch (err) {
-    bggResults.innerHTML = '<p style="color:#e94560">Failed to load game. Try again.</p>';
-  }
-};
 
 saveGameBtn.addEventListener("click", () => {
-  if (!selectedBggGame) return;
+  const name = gameName.value.trim();
   const owner = gameOwner.value.trim();
-  if (!owner) {
-    alert("Please enter the game owner's name.");
-    gameOwner.focus();
-    return;
-  }
+  if (!name) { alert("Please enter a game name."); gameName.focus(); return; }
+  if (!owner) { alert("Please enter the owner's name."); gameOwner.focus(); return; }
 
   const game = {
-    name: selectedBggGame.name,
+    name: name,
     owner: owner,
-    bggId: selectedBggGame.bggId,
-    bggUrl: selectedBggGame.bggUrl,
-    minPlayers: selectedBggGame.minPlayers,
-    maxPlayers: selectedBggGame.maxPlayers,
-    playingTime: selectedBggGame.playingTime,
-    imageUrl: selectedBggGame.image
+    minPlayers: gameMinPlayers.value || "?",
+    maxPlayers: gameMaxPlayers.value || "?",
+    playingTime: gamePlayTime.value || "?",
+    bggUrl: gameBggUrl.value.trim() || ""
   };
 
   db.ref("games").push(game);
   addGameForm.classList.add("hidden");
-  selectedBggGame = null;
-  bggSearchInput.value = "";
+  gameName.value = "";
+  gameMinPlayers.value = "";
+  gameMaxPlayers.value = "";
+  gamePlayTime.value = "";
+  gameBggUrl.value = "";
 });
 
 function loadGames() {
@@ -479,16 +365,18 @@ function loadGames() {
 
 function renderGames(games) {
   if (games.length === 0) {
-    gamesList.innerHTML = '<div class="empty-state">No games added yet. Search BGG to add some!</div>';
+    gamesList.innerHTML = '<div class="empty-state">No games added yet. Click "+ Add Game" to add one!</div>';
     return;
   }
 
   gamesList.innerHTML = games.map(g => {
+    const nameHtml = g.bggUrl
+      ? `<a href="${escapeHtml(g.bggUrl)}" target="_blank" rel="noopener">${escapeHtml(g.name)}</a>`
+      : escapeHtml(g.name);
     return `
       <div class="game-card">
-        ${g.imageUrl ? `<img class="game-thumb" src="${g.imageUrl}" alt="${escapeHtml(g.name)}">` : '<div class="game-thumb"></div>'}
         <div class="game-info">
-          <h3><a href="${g.bggUrl}" target="_blank" rel="noopener">${escapeHtml(g.name)}</a></h3>
+          <h3>${nameHtml}</h3>
           <div class="game-meta">
             <span>👥 ${g.minPlayers}–${g.maxPlayers}</span>
             <span>⏱ ${g.playingTime} min</span>

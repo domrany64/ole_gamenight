@@ -66,18 +66,17 @@
 
       <div id="addGameForm" class="form-card hidden">
         <h3>Add a Game</h3>
-        <div class="bgg-search">
-          <input type="text" id="bggSearchInput" placeholder="Search BoardGameGeek...">
-          <button id="bggSearchBtn" class="btn-primary">Search</button>
+        <input type="text" id="gameName" placeholder="Game name *" maxlength="100">
+        <div class="form-row">
+          <input type="number" id="gameMinPlayers" placeholder="Min players" min="1" max="99">
+          <input type="number" id="gameMaxPlayers" placeholder="Max players" min="1" max="99">
+          <input type="number" id="gamePlayTime" placeholder="Play time (min)" min="1">
         </div>
-        <div id="bggResults" class="bgg-results hidden"></div>
-        <div id="gameDetails" class="game-details hidden">
-          <div id="gamePreview"></div>
-          <input type="text" id="gameOwner" placeholder="Your name (owner)" maxlength="30">
-          <div class="form-actions">
-            <button id="saveGameBtn" class="btn-primary">Add to Library</button>
-            <button id="cancelGameBtn" class="btn-secondary">Cancel</button>
-          </div>
+        <input type="url" id="gameBggUrl" placeholder="BoardGameGeek link (optional)">
+        <input type="text" id="gameOwner" placeholder="Your name (owner) *" maxlength="30">
+        <div class="form-actions">
+          <button id="saveGameBtn" class="btn-primary">Add to Library</button>
+          <button id="cancelGameBtn" class="btn-secondary">Cancel</button>
         </div>
       </div>
 
