@@ -259,7 +259,7 @@ function renderSessions(sessions) {
                 ${attendees.map(a => `<span class="attendee-tag ${a === currentUser ? 'you' : ''}">${escapeHtml(a)}</span>`).join("")}
               </div>
               ${!isPast ? `<button class="btn-attend ${isAttending ? 'attending' : ''}" onclick="toggleAttend('${session.id}')" style="margin-top:.5rem">
-                ${isAttending ? '✓ I\'m going!' : 'Count me in!'}
+              ${isAttending ? '✓ Going (click to cancel)' : 'Count me in!'}
               </button>` : ''}
             </div>
             ${!isPast ? `<div class="voting-section">
@@ -324,6 +324,8 @@ window.toggleAttend = function(sessionId) {
     let attendees = snap.val() || [];
     if (attendees.includes(currentUser)) {
       attendees = attendees.filter(a => a !== currentUser);
+      // Remove their votes too
+      db.ref(`sessions/${sessionId}/votes/${currentUser}`).remove();
     } else {
       attendees.push(currentUser);
     }
