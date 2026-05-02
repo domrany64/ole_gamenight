@@ -169,14 +169,21 @@ function renderSessions(sessions) {
       games[child.key] = child.val();
     });
 
-    sessionsList.innerHTML = sessions.map(session => {
-      const dateObj = new Date(session.date + "T" + (session.time || "19:00"));
+    sessionsList.innerHTML = sessions.map((session, index) => {
+      const dateObj = new Date(session.date + "T" + (session.time || "18:00"));
       const dateStr = dateObj.toLocaleDateString("en-US", {
         weekday: "short", month: "short", day: "numeric"
       });
       const timeStr = dateObj.toLocaleTimeString("en-US", {
         hour: "numeric", minute: "2-digit"
       });
+
+      const now = new Date();
+      const isPast = dateObj < now;
+      // Find the first upcoming session (not past)
+      const firstUpcomingIndex = sessions.findIndex(s => new Date(s.date + "T" + (s.time || "18:00")) >= now);
+      const isUpcoming = index === firstUpcomingIndex;
+      const collapsed = !isUpcoming;
 
       const attendees = session.attendees || [];
       const isAttending = currentUser && attendees.includes(currentUser);
@@ -228,31 +235,44 @@ function renderSessions(sessions) {
       }
 
       return `
-        <div class="session-card">
-          <div class="session-header">
+        <div class="session-card ${isPast ? 'past' : ''}">
+          <div class="session-header" onclick="toggleCollapse(this)" style="cursor:pointer">
             <div>
-              <h3>${dateStr} · ${timeStr}</h3>
+              <h3>${dateStr} · ${timeStr}${isPast ? ' <span style="font-size:.75rem;color:#888">(past)</span>' : ''}</h3>
               ${session.note ? `<p class="session-note">${escapeHtml(session.note)}</p>` : ''}
             </div>
-            <button class="edit-btn" onclick="openEditSession('${session.id}')">✏️ Edit</button>
-          </div>
-          <div class="attendees-section">
-            <div class="attendees-label">Attending (${attendees.length}):</div>
-            <div class="attendees-list">
-              ${attendees.map(a => `<span class="attendee-tag ${a === currentUser ? 'you' : ''}">${escapeHtml(a)}</span>`).join("")}
+            <div style="display:flex;align-items:center;gap:.5rem">
+              <span class="collapse-icon">${collapsed ? '▸' : '▾'}</span>
+              <button class="edit-btn" onclick="event.stopPropagation();openEditSession('${session.id}')">✏️ Edit</button>
             </div>
-            <button class="btn-attend ${isAttending ? 'attending' : ''}" onclick="toggleAttend('${session.id}')" style="margin-top:.5rem">
-              ${isAttending ? '✓ I\'m going!' : 'Count me in!'}
-            </button>
           </div>
-          <div class="voting-section">
-            <h4>Vote for games:</h4>
-            ${votingHtml}
+          <div class="session-body ${collapsed ? 'hidden' : ''}">
+            <div class="attendees-section">
+              <div class="attendees-label">Attending (${attendees.length}):</div>
+              <div class="attendees-list">
+                ${attendees.map(a => `<span class="attendee-tag ${a === currentUser ? 'you' : ''}">${escapeHtml(a)}</span>`).join("")}
+              </div>
+              <button class="btn-attend ${isAttending ? 'attending' : ''}" onclick="toggleAttend('${session.id}')" style="margin-top:.5rem">
+                ${isAttending ? '✓ I\'m going!' : 'Count me in!'}
+              </button>
+            </div>
+            <div class="voting-section">
+              <h4>Vote for games:</h4>
+              ${votingHtml}
+            </div>
           </div>
         </div>`;
     }).join("");
   });
 }
+
+// Toggle collapse
+window.toggleCollapse = function(headerEl) {
+  const body = headerEl.nextElementSibling;
+  const icon = headerEl.querySelector('.collapse-icon');
+  body.classList.toggle('hidden');
+  icon.textContent = body.classList.contains('hidden') ? '▸' : '▾';
+};
 
 // Toggle attendance
 window.toggleAttend = function(sessionId) {

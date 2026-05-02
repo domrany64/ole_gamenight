@@ -227,6 +227,20 @@ nav {
 
 .session-card .edit-btn:hover { color: #e94560; }
 
+.session-card.past {
+  opacity: .6;
+}
+
+.session-card.past:hover {
+  opacity: .85;
+}
+
+.collapse-icon {
+  color: #888;
+  font-size: .9rem;
+  user-select: none;
+}
+
 .session-header {
   display: flex;
   align-items: flex-start;
@@ -353,7 +367,7 @@ nav {
 
 .winner-badge {
   display: inline-block;
-  background: #2ecc71;
+  background: #109c09;
   color: #807f7f;
   padding: .15rem .6rem;
   border-radius: 1rem;
