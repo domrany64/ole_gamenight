@@ -302,6 +302,16 @@ nav {
 
 .vote-game .game-name { flex: 1; }
 
+.vote-game .game-name a {
+  color: #eee;
+  text-decoration: underline;
+  text-decoration-color: #e94560;
+  text-underline-offset: 2px;
+  transition: color .2s;
+}
+
+.vote-game .game-name a:hover { color: #e94560; }
+
 .vote-game .vote-count {
   background: #1a1a2e;
   color: #e94560;
@@ -384,7 +394,9 @@ nav {
 
 .game-info h3 a {
   color: #fff;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: #e94560;
+  text-underline-offset: 3px;
   transition: color .2s;
 }
 
