@@ -70,10 +70,17 @@
       <div id="addGameForm" class="form-card hidden">
         <h3>Add a Game</h3>
         <input type="text" id="gameName" placeholder="Game name *" maxlength="100">
-        <input type="number" id="gameMinPlayers" placeholder="Min players" min="1" max="99">
-        <input type="number" id="gameMaxPlayers" placeholder="Max players" min="1" max="99">
-        <input type="number" id="gamePlayTime" placeholder="Play time (min)" min="1">
-        <input type="url" id="gameBggUrl" placeholder="BoardGameGeek link (optional)">
+        <div class="labeled-row">
+          <span class="field-label">Players:</span>
+          <label>Min <input type="number" id="gameMinPlayers" min="1" max="99"></label>
+          <label>Max <input type="number" id="gameMaxPlayers" min="1" max="99"></label>
+        </div>
+        <div class="labeled-row">
+          <span class="field-label">Play time:</span>
+          <label>Min <input type="number" id="gameMinTime" min="1"></label>
+          <label>Max <input type="number" id="gameMaxTime" min="1"></label>
+        </div>
+        <input type="url" id="gameBggUrl" placeholder="BGG link (optional)">
         <input type="text" id="gameOwner" placeholder="Your name (owner) *" maxlength="30">
         <div class="expansions-section">
           <div class="expansions-header">
@@ -115,10 +122,17 @@
     <div class="modal-content">
       <h3>Edit Game</h3>
       <input type="text" id="editGameName" placeholder="Game name *" maxlength="100">
-      <input type="number" id="editGameMinPlayers" placeholder="Min players" min="1" max="99">
-      <input type="number" id="editGameMaxPlayers" placeholder="Max players" min="1" max="99">
-      <input type="number" id="editGamePlayTime" placeholder="Play time (min)" min="1">
-      <input type="url" id="editGameBggUrl" placeholder="BoardGameGeek link (optional)">
+      <div class="labeled-row">
+        <span class="field-label">Players:</span>
+        <label>Min <input type="number" id="editGameMinPlayers" min="1" max="99"></label>
+        <label>Max <input type="number" id="editGameMaxPlayers" min="1" max="99"></label>
+      </div>
+      <div class="labeled-row">
+        <span class="field-label">Play time:</span>
+        <label>Min <input type="number" id="editGameMinTime" min="1"></label>
+        <label>Max <input type="number" id="editGameMaxTime" min="1"></label>
+      </div>
+      <input type="url" id="editGameBggUrl" placeholder="BGG link (optional)">
       <input type="text" id="editGameOwner" placeholder="Owner name *" maxlength="30">
       <div class="expansions-section">
         <div class="expansions-header">

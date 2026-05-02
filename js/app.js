@@ -62,7 +62,8 @@ const addGameForm = document.getElementById("addGameForm");
 const gameName = document.getElementById("gameName");
 const gameMinPlayers = document.getElementById("gameMinPlayers");
 const gameMaxPlayers = document.getElementById("gameMaxPlayers");
-const gamePlayTime = document.getElementById("gamePlayTime");
+const gameMinTime = document.getElementById("gameMinTime");
+const gameMaxTime = document.getElementById("gameMaxTime");
 const gameBggUrl = document.getElementById("gameBggUrl");
 const gameOwner = document.getElementById("gameOwner");
 const saveGameBtn = document.getElementById("saveGameBtn");
@@ -510,7 +511,8 @@ saveGameBtn.addEventListener("click", () => {
     owner: owner,
     minPlayers: gameMinPlayers.value || "?",
     maxPlayers: gameMaxPlayers.value || "?",
-    playingTime: gamePlayTime.value || "?",
+    minTime: gameMinTime.value || "?",
+    maxTime: gameMaxTime.value || "?",
     bggUrl: gameBggUrl.value.trim() || "",
     expansions: getExpansionsFromContainer(expansionsList)
   };
@@ -520,7 +522,8 @@ saveGameBtn.addEventListener("click", () => {
   gameName.value = "";
   gameMinPlayers.value = "";
   gameMaxPlayers.value = "";
-  gamePlayTime.value = "";
+  gameMinTime.value = "";
+  gameMaxTime.value = "";
   gameBggUrl.value = "";
   expansionsList.innerHTML = "";
 });
@@ -557,14 +560,18 @@ function renderGames(games) {
           return `<div class="game-expansion-item">+ ${expName}</div>`;
         }).join("")}
       </div>` : '';
+    const playersStr = g.minPlayers && g.maxPlayers ? `👥 ${g.minPlayers}–${g.maxPlayers}` : '';
+    const timeStr = g.minTime && g.maxTime && g.minTime !== "?" && g.maxTime !== "?"
+      ? `⏱ ${g.minTime}–${g.maxTime} min`
+      : (g.playingTime && g.playingTime !== "?" ? `⏱ ${g.playingTime} min` : '');
     return `
       <div class="game-card">
         <div class="game-info">
           <h3>${nameHtml}</h3>
           ${expansionsHtml}
           <div class="game-meta">
-            <span>👥 ${g.minPlayers}–${g.maxPlayers}</span>
-            <span>⏱ ${g.playingTime} min</span>
+            ${playersStr ? `<span>${playersStr}</span>` : ''}
+            ${timeStr ? `<span>${timeStr}</span>` : ''}
           </div>
           <div class="game-owner">Owned by ${escapeHtml(g.owner)}</div>
         </div>
@@ -579,7 +586,8 @@ const editGameModal = document.getElementById("editGameModal");
 const editGameName = document.getElementById("editGameName");
 const editGameMinPlayers = document.getElementById("editGameMinPlayers");
 const editGameMaxPlayers = document.getElementById("editGameMaxPlayers");
-const editGamePlayTime = document.getElementById("editGamePlayTime");
+const editGameMinTime = document.getElementById("editGameMinTime");
+const editGameMaxTime = document.getElementById("editGameMaxTime");
 const editGameBggUrl = document.getElementById("editGameBggUrl");
 const editGameOwner = document.getElementById("editGameOwner");
 const editAddExpansionBtn = document.getElementById("editAddExpansionBtn");
@@ -599,7 +607,8 @@ window.openEditGame = function(gameId) {
     editGameName.value = g.name || "";
     editGameMinPlayers.value = g.minPlayers !== "?" ? g.minPlayers : "";
     editGameMaxPlayers.value = g.maxPlayers !== "?" ? g.maxPlayers : "";
-    editGamePlayTime.value = g.playingTime !== "?" ? g.playingTime : "";
+    editGameMinTime.value = g.minTime && g.minTime !== "?" ? g.minTime : (g.playingTime && g.playingTime !== "?" ? g.playingTime : "");
+    editGameMaxTime.value = g.maxTime && g.maxTime !== "?" ? g.maxTime : "";
     editGameBggUrl.value = g.bggUrl || "";
     editGameOwner.value = g.owner || "";
     editExpansionsList.innerHTML = "";
@@ -621,7 +630,8 @@ updateGameBtn.addEventListener("click", () => {
     owner: owner,
     minPlayers: editGameMinPlayers.value || "?",
     maxPlayers: editGameMaxPlayers.value || "?",
-    playingTime: editGamePlayTime.value || "?",
+    minTime: editGameMinTime.value || "?",
+    maxTime: editGameMaxTime.value || "?",
     bggUrl: editGameBggUrl.value.trim() || "",
     expansions: getExpansionsFromContainer(editExpansionsList)
   });
