@@ -26,6 +26,13 @@ let editingSessionId = null;
 const expandedSessions = new Set(); // track manually expanded/collapsed sessions
 const collapsedSessions = new Set();
 
+// Browser ID for name ownership
+let browserId = localStorage.getItem("gamenight_browserid");
+if (!browserId) {
+  browserId = crypto.randomUUID();
+  localStorage.setItem("gamenight_browserid", browserId);
+}
+
 // ─── DOM References ────────────────────────────────────────
 const gate = document.getElementById("gate");
 const app = document.getElementById("app");
@@ -93,6 +100,7 @@ function showApp() {
   gate.classList.add("hidden");
   app.classList.remove("hidden");
   userNameInput.value = currentUser;
+  if (currentUser) claimName(currentUser);
   loadSessions();
   loadGames();
 }
@@ -114,10 +122,43 @@ tabs.forEach(tab => {
 });
 
 // ─── User Name ─────────────────────────────────────────────
+let nameDebounceTimer = null;
 userNameInput.addEventListener("input", () => {
-  currentUser = userNameInput.value.trim();
-  localStorage.setItem("gamenight_user", currentUser);
+  clearTimeout(nameDebounceTimer);
+  nameDebounceTimer = setTimeout(() => {
+    const name = userNameInput.value.trim();
+    if (!name) { currentUser = ""; localStorage.setItem("gamenight_user", ""); return; }
+    validateName(name);
+  }, 600);
 });
+
+async function validateName(name) {
+  const snap = await db.ref(`users/${name}`).once("value");
+  const existing = snap.val();
+
+  if (!existing || existing.browserId === browserId) {
+    // Name is free or belongs to this browser — claim it
+    claimName(name);
+  } else {
+    // Name taken by a different browser
+    const isSame = confirm(
+      `The name "${name}" was already used by someone.\n\nAre you the same person? (Maybe on a different device?)\n\nClick OK if that's you, or Cancel to pick a different name.`
+    );
+    if (isSame) {
+      claimName(name);
+    } else {
+      userNameInput.value = currentUser; // revert
+      alert("Please pick a different name.");
+      userNameInput.focus();
+    }
+  }
+}
+
+function claimName(name) {
+  currentUser = name;
+  localStorage.setItem("gamenight_user", name);
+  db.ref(`users/${name}`).set({ browserId: browserId, lastSeen: Date.now() });
+}
 
 // ─── Sessions ──────────────────────────────────────────────
 addSessionBtn.addEventListener("click", () => {
