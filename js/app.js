@@ -99,8 +99,8 @@ function authenticate() {
 function showApp() {
   gate.classList.add("hidden");
   app.classList.remove("hidden");
-  userNameInput.value = currentUser;
   if (currentUser) claimName(currentUser);
+  updateNameUI();
   loadSessions();
   loadGames();
 }
@@ -122,14 +122,37 @@ tabs.forEach(tab => {
 });
 
 // ─── User Name ─────────────────────────────────────────────
-let nameDebounceTimer = null;
-userNameInput.addEventListener("input", () => {
-  clearTimeout(nameDebounceTimer);
-  nameDebounceTimer = setTimeout(() => {
-    const name = userNameInput.value.trim();
-    if (!name) { currentUser = ""; localStorage.setItem("gamenight_user", ""); return; }
-    validateName(name);
-  }, 600);
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+function updateNameUI() {
+  if (currentUser) {
+    userNameInput.value = currentUser;
+    userNameInput.disabled = true;
+    loginBtn.classList.add("hidden");
+    logoutBtn.classList.remove("hidden");
+  } else {
+    userNameInput.value = "";
+    userNameInput.disabled = false;
+    loginBtn.classList.remove("hidden");
+    logoutBtn.classList.add("hidden");
+  }
+}
+
+loginBtn.addEventListener("click", () => {
+  const name = userNameInput.value.trim();
+  if (!name) { alert("Please enter your name."); userNameInput.focus(); return; }
+  validateName(name);
+});
+
+userNameInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") loginBtn.click();
+});
+
+logoutBtn.addEventListener("click", () => {
+  currentUser = "";
+  localStorage.setItem("gamenight_user", "");
+  updateNameUI();
 });
 
 async function validateName(name) {
@@ -137,17 +160,15 @@ async function validateName(name) {
   const existing = snap.val();
 
   if (!existing || existing.browserId === browserId) {
-    // Name is free or belongs to this browser — claim it
     claimName(name);
   } else {
-    // Name taken by a different browser
     const isSame = confirm(
       `The name "${name}" was already used by someone.\n\nAre you the same person? (Maybe on a different device?)\n\nClick OK if that's you, or Cancel to pick a different name.`
     );
     if (isSame) {
       claimName(name);
     } else {
-      userNameInput.value = currentUser; // revert
+      userNameInput.value = "";
       alert("Please pick a different name.");
       userNameInput.focus();
     }
@@ -158,6 +179,7 @@ function claimName(name) {
   currentUser = name;
   localStorage.setItem("gamenight_user", name);
   db.ref(`users/${name}`).set({ browserId: browserId, lastSeen: Date.now() });
+  updateNameUI();
 }
 
 // ─── Sessions ──────────────────────────────────────────────
@@ -259,6 +281,7 @@ function renderSessions(sessions) {
 
       // Games list for voting
       const gameKeys = Object.keys(games);
+      const canVote = isAttending;
       let votingHtml = "";
       if (gameKeys.length > 0) {
         votingHtml = gameKeys.map(gid => {
@@ -274,7 +297,7 @@ function renderSessions(sessions) {
             <div class="vote-game">
               <span class="game-name">${nameHtml}${badge}</span>
               <span class="vote-count">${count}</span>
-              <button class="vote-btn ${voted ? 'voted' : ''}" onclick="toggleVote('${session.id}','${gid}')" title="Vote">♥</button>
+              <button class="vote-btn ${voted ? 'voted' : ''} ${!canVote ? 'disabled' : ''}" onclick="toggleVote('${session.id}','${gid}')" title="${canVote ? 'Vote' : 'RSVP first to vote'}" ${!canVote ? 'disabled' : ''}>♥</button>
             </div>`;
         }).join("");
       } else {

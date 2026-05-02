@@ -360,6 +360,14 @@ nav {
   background: rgba(233, 69, 96, .15);
 }
 
+.vote-game .vote-btn:disabled {
+  opacity: .3;
+  cursor: not-allowed;
+  border-color: #333;
+  color: #555;
+}
+}
+
 .vote-game .vote-btn:hover {
   border-color: #e94560;
   color: #e94560;
