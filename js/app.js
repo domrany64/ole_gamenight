@@ -190,12 +190,15 @@ function renderSessions(sessions) {
         });
       });
 
-      // Find winner (most votes)
-      let winnerId = null;
+      // Find winner(s) (most votes, could be a tie)
       let maxVotes = 0;
       Object.entries(gameTallies).forEach(([gid, count]) => {
-        if (count > maxVotes) { maxVotes = count; winnerId = gid; }
+        if (count > maxVotes) { maxVotes = count; }
       });
+      const winnerIds = maxVotes > 0
+        ? Object.entries(gameTallies).filter(([, count]) => count === maxVotes).map(([gid]) => gid)
+        : [];
+      const isTie = winnerIds.length > 1;
 
       // User's votes for this session
       const myVotes = (currentUser && votes[currentUser]) || [];
@@ -208,10 +211,14 @@ function renderSessions(sessions) {
           const g = games[gid];
           const count = gameTallies[gid] || 0;
           const voted = myVotes.includes(gid);
-          const isWinner = gid === winnerId && maxVotes > 0;
+          const isWinner = winnerIds.includes(gid);
+          const badge = isWinner ? (isTie ? '<span class="winner-badge">🤝 Tie</span>' : '<span class="winner-badge">⭐ Pick</span>') : '';
+          const nameHtml = g.bggUrl
+            ? `<a href="${escapeHtml(g.bggUrl)}" target="_blank" rel="noopener">${escapeHtml(g.name)}</a>`
+            : escapeHtml(g.name);
           return `
             <div class="vote-game">
-              <span class="game-name">${escapeHtml(g.name)}${isWinner ? '<span class="winner-badge">⭐ Pick</span>' : ''}</span>
+              <span class="game-name">${nameHtml}${badge}</span>
               <span class="vote-count">${count}</span>
               <button class="vote-btn ${voted ? 'voted' : ''}" onclick="toggleVote('${session.id}','${gid}')" title="Vote">♥</button>
             </div>`;
