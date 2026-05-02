@@ -23,6 +23,8 @@ const PASSWORD = "OLE";
 // ─── State ─────────────────────────────────────────────────
 let currentUser = localStorage.getItem("gamenight_user") || "";
 let editingSessionId = null;
+const expandedSessions = new Set(); // track manually expanded/collapsed sessions
+const collapsedSessions = new Set();
 
 // ─── DOM References ────────────────────────────────────────
 const gate = document.getElementById("gate");
@@ -183,7 +185,11 @@ function renderSessions(sessions) {
       // Find the first upcoming session (not past)
       const firstUpcomingIndex = sessions.findIndex(s => new Date(s.date + "T" + (s.time || "18:00")) >= now);
       const isUpcoming = index === firstUpcomingIndex;
-      const collapsed = !isUpcoming;
+      // Respect manual expand/collapse, otherwise default
+      let collapsed;
+      if (expandedSessions.has(session.id)) collapsed = false;
+      else if (collapsedSessions.has(session.id)) collapsed = true;
+      else collapsed = !isUpcoming;
 
       const attendees = session.attendees || [];
       const isAttending = currentUser && attendees.includes(currentUser);
@@ -235,7 +241,7 @@ function renderSessions(sessions) {
       }
 
       return `
-        <div class="session-card ${isPast ? 'past' : ''}">
+        <div class="session-card ${isPast ? 'past' : ''}" data-session-id="${session.id}">
           <div class="session-header" onclick="toggleCollapse(this)" style="cursor:pointer">
             <div>
               <h3>${dateStr} · ${timeStr}${isPast ? ' <span style="font-size:.75rem;color:#888">(past)</span>' : ''}</h3>
@@ -252,14 +258,14 @@ function renderSessions(sessions) {
               <div class="attendees-list">
                 ${attendees.map(a => `<span class="attendee-tag ${a === currentUser ? 'you' : ''}">${escapeHtml(a)}</span>`).join("")}
               </div>
-              <button class="btn-attend ${isAttending ? 'attending' : ''}" onclick="toggleAttend('${session.id}')" style="margin-top:.5rem">
+              ${!isPast ? `<button class="btn-attend ${isAttending ? 'attending' : ''}" onclick="toggleAttend('${session.id}')" style="margin-top:.5rem">
                 ${isAttending ? '✓ I\'m going!' : 'Count me in!'}
-              </button>
+              </button>` : ''}
             </div>
-            <div class="voting-section">
+            ${!isPast ? `<div class="voting-section">
               <h4>Vote for games:</h4>
               ${votingHtml}
-            </div>
+            </div>` : '<div class="voting-section"><p class="no-votes-msg">Voting closed (past session)</p></div>'}
           </div>
         </div>`;
     }).join("");
@@ -268,10 +274,20 @@ function renderSessions(sessions) {
 
 // Toggle collapse
 window.toggleCollapse = function(headerEl) {
+  const card = headerEl.closest('.session-card');
+  const sessionId = card.dataset.sessionId;
   const body = headerEl.nextElementSibling;
   const icon = headerEl.querySelector('.collapse-icon');
   body.classList.toggle('hidden');
-  icon.textContent = body.classList.contains('hidden') ? '▸' : '▾';
+  const isNowCollapsed = body.classList.contains('hidden');
+  icon.textContent = isNowCollapsed ? '▸' : '▾';
+  if (isNowCollapsed) {
+    expandedSessions.delete(sessionId);
+    collapsedSessions.add(sessionId);
+  } else {
+    collapsedSessions.delete(sessionId);
+    expandedSessions.add(sessionId);
+  }
 };
 
 // Toggle attendance
