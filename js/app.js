@@ -265,7 +265,10 @@ function renderSessions(sessions) {
             ${!isPast ? `<div class="voting-section">
               <h4>Vote for games:</h4>
               ${votingHtml}
-            </div>` : '<div class="voting-section"><p class="no-votes-msg">Voting closed (past session)</p></div>'}
+            </div>` : `<div class="voting-section">${winnerIds.length > 0 ? (isTie
+              ? `<p class="no-votes-msg">🤝 Tied: ${winnerIds.map(id => games[id] ? escapeHtml(games[id].name) : '').join(', ')}</p>`
+              : `<p class="no-votes-msg">⭐ Played: <strong>${games[winnerIds[0]] ? escapeHtml(games[winnerIds[0]].name) : ''}</strong></p>`)
+              : '<p class="no-votes-msg">No game was picked</p>'}</div>`}
           </div>
         </div>`;
     }).join("");
