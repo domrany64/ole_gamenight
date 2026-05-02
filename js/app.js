@@ -19,7 +19,12 @@ const db = firebase.database();
 
 // ─── Constants ─────────────────────────────────────────────
 const PASSWORD = "OLE";
-const CORS_PROXY = "https://corsproxy.io/?";
+const CORS_PROXIES = [
+  "https://api.allorigins.win/raw?url=",
+  "https://corsproxy.io/?",
+  "https://cors-anywhere.herokuapp.com/"
+];
+let corsProxyIndex = 0;
 const BGG_SEARCH_URL = "https://boardgamegeek.com/xmlapi2/search";
 const BGG_THING_URL = "https://boardgamegeek.com/xmlapi2/thing";
 
@@ -342,6 +347,20 @@ bggSearchInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") searchBGG();
 });
 
+async function fetchWithProxy(targetUrl) {
+  for (let i = 0; i < CORS_PROXIES.length; i++) {
+    const proxy = CORS_PROXIES[(corsProxyIndex + i) % CORS_PROXIES.length];
+    try {
+      const resp = await fetch(proxy + encodeURIComponent(targetUrl));
+      if (resp.ok) {
+        corsProxyIndex = (corsProxyIndex + i) % CORS_PROXIES.length;
+        return await resp.text();
+      }
+    } catch (e) { /* try next */ }
+  }
+  throw new Error("All proxies failed");
+}
+
 async function searchBGG() {
   const query = bggSearchInput.value.trim();
   if (!query) return;
@@ -351,9 +370,8 @@ async function searchBGG() {
   gameDetails.classList.add("hidden");
 
   try {
-    const url = `${CORS_PROXY}${encodeURIComponent(BGG_SEARCH_URL + "?query=" + encodeURIComponent(query) + "&type=boardgame")}`;
-    const resp = await fetch(url);
-    const text = await resp.text();
+    const targetUrl = BGG_SEARCH_URL + "?query=" + encodeURIComponent(query) + "&type=boardgame";
+    const text = await fetchWithProxy(targetUrl);
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "text/xml");
     const items = xml.querySelectorAll("item");
@@ -386,9 +404,8 @@ window.selectBggGame = async function(bggId) {
   bggResults.innerHTML = '<span class="spinner"></span> Loading game details...';
 
   try {
-    const url = `${CORS_PROXY}${encodeURIComponent(BGG_THING_URL + "?id=" + bggId + "&stats=1")}`;
-    const resp = await fetch(url);
-    const text = await resp.text();
+    const targetUrl = BGG_THING_URL + "?id=" + bggId + "&stats=1";
+    const text = await fetchWithProxy(targetUrl);
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "text/xml");
     const item = xml.querySelector("item");
