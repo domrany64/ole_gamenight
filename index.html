@@ -49,6 +49,7 @@
           <input type="date" id="sessionDate">
           <input type="time" id="sessionTime" value="18:00">
         </div>
+        <input type="text" id="sessionLocation" placeholder="Location (optional)" maxlength="100">
         <input type="text" id="sessionNote" placeholder="Note (optional)" maxlength="100">
         <div class="form-actions">
           <button id="saveSessionBtn" class="btn-primary">Save</button>
@@ -69,13 +70,18 @@
       <div id="addGameForm" class="form-card hidden">
         <h3>Add a Game</h3>
         <input type="text" id="gameName" placeholder="Game name *" maxlength="100">
-        <div class="form-row">
-          <input type="number" id="gameMinPlayers" placeholder="Min players" min="1" max="99">
-          <input type="number" id="gameMaxPlayers" placeholder="Max players" min="1" max="99">
-          <input type="number" id="gamePlayTime" placeholder="Play time (min)" min="1">
-        </div>
+        <input type="number" id="gameMinPlayers" placeholder="Min players" min="1" max="99">
+        <input type="number" id="gameMaxPlayers" placeholder="Max players" min="1" max="99">
+        <input type="number" id="gamePlayTime" placeholder="Play time (min)" min="1">
         <input type="url" id="gameBggUrl" placeholder="BoardGameGeek link (optional)">
         <input type="text" id="gameOwner" placeholder="Your name (owner) *" maxlength="30">
+        <div class="expansions-section">
+          <div class="expansions-header">
+            <span>Expansions</span>
+            <button type="button" id="addExpansionBtn" class="btn-small">+</button>
+          </div>
+          <div id="expansionsList"></div>
+        </div>
         <div class="form-actions">
           <button id="saveGameBtn" class="btn-primary">Add to Library</button>
           <button id="cancelGameBtn" class="btn-secondary">Cancel</button>
@@ -94,6 +100,7 @@
         <input type="date" id="editSessionDate">
         <input type="time" id="editSessionTime">
       </div>
+      <input type="text" id="editSessionLocation" placeholder="Location (optional)" maxlength="100">
       <input type="text" id="editSessionNote" placeholder="Note (optional)" maxlength="100">
       <div class="form-actions">
         <button id="updateSessionBtn" class="btn-primary">Update</button>
@@ -108,13 +115,18 @@
     <div class="modal-content">
       <h3>Edit Game</h3>
       <input type="text" id="editGameName" placeholder="Game name *" maxlength="100">
-      <div class="form-row">
-        <input type="number" id="editGameMinPlayers" placeholder="Min players" min="1" max="99">
-        <input type="number" id="editGameMaxPlayers" placeholder="Max players" min="1" max="99">
-        <input type="number" id="editGamePlayTime" placeholder="Play time (min)" min="1">
-      </div>
+      <input type="number" id="editGameMinPlayers" placeholder="Min players" min="1" max="99">
+      <input type="number" id="editGameMaxPlayers" placeholder="Max players" min="1" max="99">
+      <input type="number" id="editGamePlayTime" placeholder="Play time (min)" min="1">
       <input type="url" id="editGameBggUrl" placeholder="BoardGameGeek link (optional)">
       <input type="text" id="editGameOwner" placeholder="Owner name *" maxlength="30">
+      <div class="expansions-section">
+        <div class="expansions-header">
+          <span>Expansions</span>
+          <button type="button" id="editAddExpansionBtn" class="btn-small">+</button>
+        </div>
+        <div id="editExpansionsList"></div>
+      </div>
       <div class="form-actions">
         <button id="updateGameBtn" class="btn-primary">Update</button>
         <button id="deleteGameBtn" class="btn-danger">Delete</button>

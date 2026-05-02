@@ -463,6 +463,73 @@ nav {
 
 .game-card .edit-btn:hover { color: #e94560; }
 
+/* ── Expansions ── */
+.expansions-section {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+.expansions-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .4rem;
+  font-size: .85rem;
+  color: #aaa;
+}
+
+.expansion-row {
+  display: flex;
+  gap: .4rem;
+  align-items: center;
+  margin-bottom: .35rem;
+}
+
+.expansion-row input {
+  margin-bottom: 0 !important;
+}
+
+.expansion-row input:first-child {
+  flex: 2;
+}
+
+.expansion-row input:nth-child(2) {
+  flex: 3;
+}
+
+.expansion-row .remove-expansion-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 .3rem;
+  transition: color .2s;
+}
+
+.expansion-row .remove-expansion-btn:hover { color: #e94560; }
+
+.game-expansions {
+  margin-top: .2rem;
+}
+
+.game-expansion-item {
+  font-size: .75rem;
+  color: #999;
+  padding-left: .5rem;
+  line-height: 1.6;
+}
+
+.game-expansion-item a {
+  color: #999;
+  text-decoration: underline;
+  text-decoration-color: #555;
+  text-underline-offset: 2px;
+  transition: color .2s;
+}
+
+.game-expansion-item a:hover { color: #e94560; }
+
 /* ── Forms ── */
 .form-card h3 {
   color: #ddd;

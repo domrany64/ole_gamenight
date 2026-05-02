@@ -51,6 +51,7 @@ const addSessionBtn = document.getElementById("addSessionBtn");
 const addSessionForm = document.getElementById("addSessionForm");
 const sessionDate = document.getElementById("sessionDate");
 const sessionTime = document.getElementById("sessionTime");
+const sessionLocation = document.getElementById("sessionLocation");
 const sessionNote = document.getElementById("sessionNote");
 const saveSessionBtn = document.getElementById("saveSessionBtn");
 const cancelSessionBtn = document.getElementById("cancelSessionBtn");
@@ -71,6 +72,7 @@ const cancelGameBtn = document.getElementById("cancelGameBtn");
 const editSessionModal = document.getElementById("editSessionModal");
 const editSessionDate = document.getElementById("editSessionDate");
 const editSessionTime = document.getElementById("editSessionTime");
+const editSessionLocation = document.getElementById("editSessionLocation");
 const editSessionNote = document.getElementById("editSessionNote");
 const updateSessionBtn = document.getElementById("updateSessionBtn");
 const deleteSessionBtn = document.getElementById("deleteSessionBtn");
@@ -199,13 +201,15 @@ saveSessionBtn.addEventListener("click", () => {
   if (!sessionDate.value) return;
   const newSession = {
     date: sessionDate.value,
-    time: sessionTime.value || "19:00",
+    time: sessionTime.value || "18:00",
+    location: sessionLocation.value || "",
     note: sessionNote.value || "",
     attendees: [],
     votes: {}
   };
   db.ref("sessions").push(newSession);
   addSessionForm.classList.add("hidden");
+  sessionLocation.value = "";
   sessionNote.value = "";
 });
 
@@ -309,6 +313,7 @@ function renderSessions(sessions) {
           <div class="session-header" onclick="toggleCollapse(this)" style="cursor:pointer">
             <div>
               <h3>${dateStr} · ${timeStr}${isPast ? ' <span style="font-size:.75rem;color:#888">(past)</span>' : ''}</h3>
+              ${session.location ? `<p class="session-note">📍 ${escapeHtml(session.location)}</p>` : ''}
               ${session.note ? `<p class="session-note">${escapeHtml(session.note)}</p>` : ''}
             </div>
             <div style="display:flex;align-items:center;gap:.5rem">
@@ -422,7 +427,8 @@ window.openEditSession = function(sessionId) {
   db.ref(`sessions/${sessionId}`).once("value", snap => {
     const s = snap.val();
     editSessionDate.value = s.date;
-    editSessionTime.value = s.time || "19:00";
+    editSessionTime.value = s.time || "18:00";
+    editSessionLocation.value = s.location || "";
     editSessionNote.value = s.note || "";
     editSessionModal.classList.remove("hidden");
   });
@@ -433,6 +439,7 @@ updateSessionBtn.addEventListener("click", () => {
   db.ref(`sessions/${editingSessionId}`).update({
     date: editSessionDate.value,
     time: editSessionTime.value,
+    location: editSessionLocation.value,
     note: editSessionNote.value
   });
   editSessionModal.classList.add("hidden");
@@ -451,14 +458,46 @@ cancelEditSessionBtn.addEventListener("click", () => {
 });
 
 // ─── Games ─────────────────────────────────────────────────
+const addExpansionBtn = document.getElementById("addExpansionBtn");
+const expansionsList = document.getElementById("expansionsList");
+
 addGameBtn.addEventListener("click", () => {
   addGameForm.classList.toggle("hidden");
   gameOwner.value = currentUser;
+  expansionsList.innerHTML = "";
 });
 
 cancelGameBtn.addEventListener("click", () => {
   addGameForm.classList.add("hidden");
 });
+
+addExpansionBtn.addEventListener("click", () => {
+  addExpansionRow(expansionsList);
+});
+
+function addExpansionRow(container, name = "", url = "") {
+  const row = document.createElement("div");
+  row.className = "expansion-row";
+  row.innerHTML = `
+    <input type="text" placeholder="Expansion name" value="${escapeHtml(name)}" maxlength="100">
+    <input type="url" placeholder="BGG link (optional)" value="${escapeHtml(url)}">
+    <button type="button" class="remove-expansion-btn" onclick="this.parentElement.remove()">✕</button>
+  `;
+  container.appendChild(row);
+}
+
+function getExpansionsFromContainer(container) {
+  const rows = container.querySelectorAll(".expansion-row");
+  const expansions = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll("input");
+    const name = inputs[0].value.trim();
+    if (name) {
+      expansions.push({ name: name, bggUrl: inputs[1].value.trim() || "" });
+    }
+  });
+  return expansions;
+}
 
 saveGameBtn.addEventListener("click", () => {
   const name = gameName.value.trim();
@@ -472,7 +511,8 @@ saveGameBtn.addEventListener("click", () => {
     minPlayers: gameMinPlayers.value || "?",
     maxPlayers: gameMaxPlayers.value || "?",
     playingTime: gamePlayTime.value || "?",
-    bggUrl: gameBggUrl.value.trim() || ""
+    bggUrl: gameBggUrl.value.trim() || "",
+    expansions: getExpansionsFromContainer(expansionsList)
   };
 
   db.ref("games").push(game);
@@ -482,6 +522,7 @@ saveGameBtn.addEventListener("click", () => {
   gameMaxPlayers.value = "";
   gamePlayTime.value = "";
   gameBggUrl.value = "";
+  expansionsList.innerHTML = "";
 });
 
 function loadGames() {
@@ -500,14 +541,27 @@ function renderGames(games) {
     return;
   }
 
+  games.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
   gamesList.innerHTML = games.map(g => {
     const nameHtml = g.bggUrl
       ? `<a href="${escapeHtml(g.bggUrl)}" target="_blank" rel="noopener">${escapeHtml(g.name)}</a>`
       : escapeHtml(g.name);
+    const expansions = g.expansions || [];
+    const expansionsHtml = expansions.length > 0 ? `
+      <div class="game-expansions">
+        ${expansions.map(exp => {
+          const expName = exp.bggUrl
+            ? `<a href="${escapeHtml(exp.bggUrl)}" target="_blank" rel="noopener">${escapeHtml(exp.name)}</a>`
+            : escapeHtml(exp.name);
+          return `<div class="game-expansion-item">+ ${expName}</div>`;
+        }).join("")}
+      </div>` : '';
     return `
       <div class="game-card">
         <div class="game-info">
           <h3>${nameHtml}</h3>
+          ${expansionsHtml}
           <div class="game-meta">
             <span>👥 ${g.minPlayers}–${g.maxPlayers}</span>
             <span>⏱ ${g.playingTime} min</span>
@@ -528,9 +582,15 @@ const editGameMaxPlayers = document.getElementById("editGameMaxPlayers");
 const editGamePlayTime = document.getElementById("editGamePlayTime");
 const editGameBggUrl = document.getElementById("editGameBggUrl");
 const editGameOwner = document.getElementById("editGameOwner");
+const editAddExpansionBtn = document.getElementById("editAddExpansionBtn");
+const editExpansionsList = document.getElementById("editExpansionsList");
 const updateGameBtn = document.getElementById("updateGameBtn");
 const deleteGameBtn = document.getElementById("deleteGameBtn");
 const cancelEditGameBtn = document.getElementById("cancelEditGameBtn");
+
+editAddExpansionBtn.addEventListener("click", () => {
+  addExpansionRow(editExpansionsList);
+});
 
 window.openEditGame = function(gameId) {
   editingGameId = gameId;
@@ -542,6 +602,10 @@ window.openEditGame = function(gameId) {
     editGamePlayTime.value = g.playingTime !== "?" ? g.playingTime : "";
     editGameBggUrl.value = g.bggUrl || "";
     editGameOwner.value = g.owner || "";
+    editExpansionsList.innerHTML = "";
+    (g.expansions || []).forEach(exp => {
+      addExpansionRow(editExpansionsList, exp.name, exp.bggUrl);
+    });
     editGameModal.classList.remove("hidden");
   });
 };
@@ -558,7 +622,8 @@ updateGameBtn.addEventListener("click", () => {
     minPlayers: editGameMinPlayers.value || "?",
     maxPlayers: editGameMaxPlayers.value || "?",
     playingTime: editGamePlayTime.value || "?",
-    bggUrl: editGameBggUrl.value.trim() || ""
+    bggUrl: editGameBggUrl.value.trim() || "",
+    expansions: getExpansionsFromContainer(editExpansionsList)
   });
   editGameModal.classList.add("hidden");
 });
