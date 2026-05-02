@@ -442,6 +442,19 @@ nav {
 
 .game-card .remove-btn:hover { color: #e94560; }
 
+.game-card .edit-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: .85rem;
+  padding: .2rem .5rem;
+  border-radius: .3rem;
+  transition: color .2s;
+}
+
+.game-card .edit-btn:hover { color: #e94560; }
+
 /* ── Forms ── */
 .form-card h3 {
   color: #ddd;
@@ -630,6 +643,14 @@ input:focus {
   color: #555;
   padding: 2rem 1rem;
   font-size: .95rem;
+}
+
+.section-label {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: .75rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid #333;
 }
 
 /* ── Responsive ── */

@@ -171,7 +171,7 @@ function renderSessions(sessions) {
       games[child.key] = child.val();
     });
 
-    sessionsList.innerHTML = sessions.map((session, index) => {
+    const rendered = sessions.map((session, index) => {
       const dateObj = new Date(session.date + "T" + (session.time || "18:00"));
       const dateStr = dateObj.toLocaleDateString("en-US", {
         weekday: "short", month: "short", day: "numeric"
@@ -271,7 +271,26 @@ function renderSessions(sessions) {
               : '<p class="no-votes-msg">No game was picked</p>'}</div>`}
           </div>
         </div>`;
-    }).join("");
+    });
+
+    const now = new Date();
+    const upcomingSessions = rendered.filter((_, i) => {
+      const s = sessions[i];
+      return new Date(s.date + "T" + (s.time || "18:00")) >= now;
+    });
+    const pastSessions = rendered.filter((_, i) => {
+      const s = sessions[i];
+      return new Date(s.date + "T" + (s.time || "18:00")) < now;
+    });
+
+    let html = '';
+    if (upcomingSessions.length > 0) {
+      html += `<h3 class="section-label">Upcoming</h3>` + upcomingSessions.join("");
+    }
+    if (pastSessions.length > 0) {
+      html += `<h3 class="section-label" style="margin-top:1.5rem">Past</h3>` + pastSessions.join("");
+    }
+    sessionsList.innerHTML = html;
   });
 }
 
