@@ -429,16 +429,66 @@ function renderGames(games) {
           </div>
           <div class="game-owner">Owned by ${escapeHtml(g.owner)}</div>
         </div>
-        <button class="remove-btn" onclick="removeGame('${g.id}')" title="Remove">🗑</button>
+        <button class="edit-btn" onclick="openEditGame('${g.id}')" title="Edit">✏️</button>
       </div>`;
   }).join("");
 }
 
-window.removeGame = function(gameId) {
-  if (confirm("Remove this game from the library?")) {
-    db.ref(`games/${gameId}`).remove();
-  }
+// Edit game
+let editingGameId = null;
+const editGameModal = document.getElementById("editGameModal");
+const editGameName = document.getElementById("editGameName");
+const editGameMinPlayers = document.getElementById("editGameMinPlayers");
+const editGameMaxPlayers = document.getElementById("editGameMaxPlayers");
+const editGamePlayTime = document.getElementById("editGamePlayTime");
+const editGameBggUrl = document.getElementById("editGameBggUrl");
+const editGameOwner = document.getElementById("editGameOwner");
+const updateGameBtn = document.getElementById("updateGameBtn");
+const deleteGameBtn = document.getElementById("deleteGameBtn");
+const cancelEditGameBtn = document.getElementById("cancelEditGameBtn");
+
+window.openEditGame = function(gameId) {
+  editingGameId = gameId;
+  db.ref(`games/${gameId}`).once("value", snap => {
+    const g = snap.val();
+    editGameName.value = g.name || "";
+    editGameMinPlayers.value = g.minPlayers !== "?" ? g.minPlayers : "";
+    editGameMaxPlayers.value = g.maxPlayers !== "?" ? g.maxPlayers : "";
+    editGamePlayTime.value = g.playingTime !== "?" ? g.playingTime : "";
+    editGameBggUrl.value = g.bggUrl || "";
+    editGameOwner.value = g.owner || "";
+    editGameModal.classList.remove("hidden");
+  });
 };
+
+updateGameBtn.addEventListener("click", () => {
+  if (!editingGameId) return;
+  const name = editGameName.value.trim();
+  const owner = editGameOwner.value.trim();
+  if (!name) { alert("Please enter a game name."); editGameName.focus(); return; }
+  if (!owner) { alert("Please enter the owner's name."); editGameOwner.focus(); return; }
+  db.ref(`games/${editingGameId}`).update({
+    name: name,
+    owner: owner,
+    minPlayers: editGameMinPlayers.value || "?",
+    maxPlayers: editGameMaxPlayers.value || "?",
+    playingTime: editGamePlayTime.value || "?",
+    bggUrl: editGameBggUrl.value.trim() || ""
+  });
+  editGameModal.classList.add("hidden");
+});
+
+deleteGameBtn.addEventListener("click", () => {
+  if (!editingGameId) return;
+  if (confirm("Remove this game from the library?")) {
+    db.ref(`games/${editingGameId}`).remove();
+    editGameModal.classList.add("hidden");
+  }
+});
+
+cancelEditGameBtn.addEventListener("click", () => {
+  editGameModal.classList.add("hidden");
+});
 
 // ─── Helpers ───────────────────────────────────────────────
 function escapeHtml(str) {

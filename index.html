@@ -101,6 +101,26 @@
     </div>
   </div>
 
+  <!-- Edit Game Modal -->
+  <div id="editGameModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Edit Game</h3>
+      <input type="text" id="editGameName" placeholder="Game name *" maxlength="100">
+      <div class="form-row">
+        <input type="number" id="editGameMinPlayers" placeholder="Min players" min="1" max="99">
+        <input type="number" id="editGameMaxPlayers" placeholder="Max players" min="1" max="99">
+        <input type="number" id="editGamePlayTime" placeholder="Play time (min)" min="1">
+      </div>
+      <input type="url" id="editGameBggUrl" placeholder="BoardGameGeek link (optional)">
+      <input type="text" id="editGameOwner" placeholder="Owner name *" maxlength="30">
+      <div class="form-actions">
+        <button id="updateGameBtn" class="btn-primary">Update</button>
+        <button id="deleteGameBtn" class="btn-danger">Delete</button>
+        <button id="cancelEditGameBtn" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
