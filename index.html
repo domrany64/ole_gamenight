@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Night Planner</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Password Gate -->
+  <div id="gate" class="gate">
+    <div class="gate-box">
+      <h1>🎲 Game Night</h1>
+      <p>Enter the secret password to join</p>
+      <input type="password" id="passwordInput" placeholder="Password" autocomplete="off">
+      <button id="enterBtn">Enter</button>
+      <p id="gateError" class="error hidden">Wrong password, try again!</p>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <header>
+      <h1>🎲 Game Night</h1>
+      <div class="user-bar">
+        <label for="userName">Your name:</label>
+        <input type="text" id="userName" placeholder="Enter your name" maxlength="30">
+      </div>
+      <nav>
+        <button class="tab active" data-tab="sessions">Sessions</button>
+        <button class="tab" data-tab="games">Game Library</button>
+      </nav>
+    </header>
+
+    <!-- Sessions Tab -->
+    <main id="sessionsTab" class="tab-content active">
+      <div class="section-header">
+        <h2>Upcoming Sessions</h2>
+        <button id="addSessionBtn" class="btn-small">+ Add Date</button>
+      </div>
+
+      <div id="addSessionForm" class="form-card hidden">
+        <h3>Add a Session</h3>
+        <div class="form-row">
+          <input type="date" id="sessionDate">
+          <input type="time" id="sessionTime" value="19:00">
+        </div>
+        <input type="text" id="sessionNote" placeholder="Note (optional)" maxlength="100">
+        <div class="form-actions">
+          <button id="saveSessionBtn" class="btn-primary">Save</button>
+          <button id="cancelSessionBtn" class="btn-secondary">Cancel</button>
+        </div>
+      </div>
+
+      <div id="sessionsList"></div>
+    </main>
+
+    <!-- Games Tab -->
+    <main id="gamesTab" class="tab-content">
+      <div class="section-header">
+        <h2>Game Library</h2>
+        <button id="addGameBtn" class="btn-small">+ Add Game</button>
+      </div>
+
+      <div id="addGameForm" class="form-card hidden">
+        <h3>Add a Game</h3>
+        <div class="bgg-search">
+          <input type="text" id="bggSearchInput" placeholder="Search BoardGameGeek...">
+          <button id="bggSearchBtn" class="btn-primary">Search</button>
+        </div>
+        <div id="bggResults" class="bgg-results hidden"></div>
+        <div id="gameDetails" class="game-details hidden">
+          <div id="gamePreview"></div>
+          <input type="text" id="gameOwner" placeholder="Your name (owner)" maxlength="30">
+          <div class="form-actions">
+            <button id="saveGameBtn" class="btn-primary">Add to Library</button>
+            <button id="cancelGameBtn" class="btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="gamesList"></div>
+    </main>
+  </div>
+
+  <!-- Edit Session Modal -->
+  <div id="editSessionModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Edit Session</h3>
+      <div class="form-row">
+        <input type="date" id="editSessionDate">
+        <input type="time" id="editSessionTime">
+      </div>
+      <input type="text" id="editSessionNote" placeholder="Note (optional)" maxlength="100">
+      <div class="form-actions">
+        <button id="updateSessionBtn" class="btn-primary">Update</button>
+        <button id="deleteSessionBtn" class="btn-danger">Delete</button>
+        <button id="cancelEditSessionBtn" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
