@@ -530,19 +530,60 @@ saveGameBtn.addEventListener("click", () => {
 });
 
 function loadGames() {
-  db.ref("games").on("value", (snapshot) => {
+  db.ref("games").on("value", (gamesSnap) => {
     const games = [];
-    snapshot.forEach(child => {
+    gamesSnap.forEach(child => {
       games.push({ id: child.key, ...child.val() });
     });
-    renderGames(games);
+    // Read sessions once to compute win counts
+    db.ref("sessions").once("value", (sessSnap) => {
+      const winCounts = {};
+      const now = new Date();
+      sessSnap.forEach(child => {
+        const s = child.val();
+        const sDate = new Date(s.date + "T" + (s.time || "18:00"));
+        if (sDate >= now) return; // only past sessions
+        const votes = s.votes || {};
+        const tallies = {};
+        Object.values(votes).forEach(uv => {
+          (uv || []).forEach(gid => { tallies[gid] = (tallies[gid] || 0) + 1; });
+        });
+        let max = 0;
+        Object.values(tallies).forEach(c => { if (c > max) max = c; });
+        if (max > 0) {
+          const winners = Object.entries(tallies).filter(([, c]) => c === max).map(([gid]) => gid);
+          winners.forEach(gid => { winCounts[gid] = (winCounts[gid] || 0) + 1; });
+        }
+      });
+      renderGames(games, winCounts);
+    });
   });
 }
 
-function renderGames(games) {
+function renderGames(games, winCounts) {
+  winCounts = winCounts || {};
   if (games.length === 0) {
     gamesList.innerHTML = '<div class="empty-state">No games added yet. Click "+ Add Game" to add one!</div>';
     return;
+  }
+
+  // Determine top 3 favorites
+  const ranked = Object.entries(winCounts)
+    .filter(([, c]) => c > 0)
+    .sort((a, b) => b[1] - a[1]);
+  const favMedals = {};
+  const medals = ['🥇', '🥈', '🥉'];
+  let medalIdx = 0;
+  let i = 0;
+  while (i < ranked.length && medalIdx < 3) {
+    const count = ranked[i][1];
+    const tiedIds = [];
+    while (i < ranked.length && ranked[i][1] === count) {
+      tiedIds.push(ranked[i][0]);
+      i++;
+    }
+    tiedIds.forEach(id => { favMedals[id] = medals[medalIdx]; });
+    medalIdx++;
   }
 
   games.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
@@ -551,6 +592,9 @@ function renderGames(games) {
     const nameHtml = g.bggUrl
       ? `<a href="${escapeHtml(g.bggUrl)}" target="_blank" rel="noopener">${escapeHtml(g.name)}</a>`
       : escapeHtml(g.name);
+    const favBadge = favMedals[g.id]
+      ? `<span class="fav-badge">${favMedals[g.id]} ${winCounts[g.id]}×</span>`
+      : '';
     const expansions = g.expansions || [];
     const expansionsHtml = expansions.length > 0 ? `
       <div class="game-expansions">
@@ -568,7 +612,7 @@ function renderGames(games) {
     return `
       <div class="game-card">
         <div class="game-info">
-          <h3>${nameHtml}</h3>
+          <h3>${nameHtml}${favBadge}</h3>
           ${expansionsHtml}
           <div class="game-meta">
             ${playersStr ? `<span>${playersStr}</span>` : ''}
