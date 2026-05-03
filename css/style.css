@@ -7,7 +7,7 @@
 body {
   font-family: 'Fredoka', sans-serif;
   background: #1a1a2e;
-  color: #eee;
+  color: #bbb;
   min-height: 100vh;
 }
 
@@ -49,7 +49,7 @@ body {
   border: 2px solid #333;
   border-radius: .75rem;
   background: #0f3460;
-  color: #fff;
+  color: #ccc;
   font-size: 1.1rem;
   font-family: inherit;
   text-align: center;
@@ -67,7 +67,7 @@ body {
   border: none;
   border-radius: .75rem;
   background: #e94560;
-  color: #fff;
+  color: #ccc;
   font-size: 1.1rem;
   font-family: inherit;
   font-weight: 600;
@@ -119,7 +119,7 @@ header h1 {
   border: 2px solid #333;
   border-radius: .5rem;
   background: #0f3460;
-  color: #fff;
+  color: #ccc;
   font-family: inherit;
   font-size: .95rem;
 }
@@ -183,7 +183,7 @@ nav {
   border: none;
   border-radius: .5rem;
   background: #e94560;
-  color: #fff;
+  color: #ccc;
   font-family: inherit;
   font-size: .85rem;
   font-weight: 600;
@@ -274,7 +274,7 @@ nav {
 
 .attendee-tag.you {
   background: #e94560;
-  color: #fff;
+  color: #ccc;
 }
 
 .btn-attend {
@@ -292,7 +292,7 @@ nav {
 
 .btn-attend:hover, .btn-attend.attending {
   background: #e94560;
-  color: #fff;
+  color: #ccc;
 }
 
 /* ── Voting ── */
@@ -336,7 +336,7 @@ nav {
 }
 
 .vote-game .game-name a {
-  color: #eee;
+  color: #bbb;
   text-decoration: underline;
   text-decoration-color: rgba(255,255,255,.4);
   text-underline-offset: 2px;
@@ -443,12 +443,12 @@ nav {
 
 .game-info h3 {
   font-size: 1.05rem;
-  color: #fff;
+  color: #ccc;
   margin-bottom: .15rem;
 }
 
 .game-info h3 a {
-  color: #fff;
+  color: #ccc;
   text-decoration: underline;
   text-decoration-color: rgba(255,255,255,.4);
   text-underline-offset: 3px;
@@ -577,7 +577,7 @@ input[type="text"] {
   border: 2px solid #333;
   border-radius: .5rem;
   background: #0f3460;
-  color: #fff;
+  color: #ccc;
   font-family: inherit;
   font-size: .95rem;
   margin-bottom: .5rem;
@@ -635,7 +635,7 @@ input:focus {
   border: none;
   border-radius: .5rem;
   background: #e94560;
-  color: #fff;
+  color: #ccc;
   font-family: inherit;
   font-size: .9rem;
   font-weight: 600;
@@ -667,7 +667,7 @@ input:focus {
   border: none;
   border-radius: .5rem;
   background: #800;
-  color: #fff;
+  color: #ccc;
   font-family: inherit;
   font-size: .9rem;
   font-weight: 600;
@@ -739,7 +739,7 @@ input:focus {
   object-fit: cover;
 }
 
-.game-preview-info h4 { color: #fff; margin-bottom: .25rem; }
+.game-preview-info h4 { color: #ccc; margin-bottom: .25rem; }
 .game-preview-info p { font-size: .85rem; color: #aaa; }
 
 /* ── Modal ── */
