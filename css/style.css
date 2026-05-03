@@ -13,6 +13,13 @@ body {
 
 .hidden { display: none !important; }
 
+.meeple-icon {
+  width: 68px;
+  height: 78px;
+  vertical-align: -20px;
+  object-fit: contain;
+}
+
 /* ── Gate ── */
 .gate {
   display: flex;
