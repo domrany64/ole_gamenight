@@ -289,7 +289,7 @@ function renderSessions(sessions) {
       const canVote = isAttending;
       let votingHtml = "";
       if (gameKeys.length > 0) {
-        votingHtml = gameKeys.map(gid => {
+        const items = gameKeys.map(gid => {
           const g = games[gid];
           const count = gameTallies[gid] || 0;
           const voted = myVotes.includes(gid);
@@ -305,6 +305,7 @@ function renderSessions(sessions) {
               <button class="vote-btn ${voted ? 'voted' : ''} ${!canVote ? 'disabled' : ''}" onclick="toggleVote('${session.id}','${gid}')" title="${canVote ? 'Vote' : 'RSVP first to vote'}" ${!canVote ? 'disabled' : ''}>♥</button>
             </div>`;
         }).join("");
+        votingHtml = `<div class="voting-grid">${items}</div>`;
       } else {
         votingHtml = '<p class="no-votes-msg">Add games to the library first to vote!</p>';
       }
