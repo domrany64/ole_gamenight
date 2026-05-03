@@ -547,7 +547,7 @@ function renderGames(games) {
 
   games.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
-  gamesList.innerHTML = games.map(g => {
+  gamesList.innerHTML = '<div class="games-grid">' + games.map(g => {
     const nameHtml = g.bggUrl
       ? `<a href="${escapeHtml(g.bggUrl)}" target="_blank" rel="noopener">${escapeHtml(g.name)}</a>`
       : escapeHtml(g.name);
@@ -578,7 +578,7 @@ function renderGames(games) {
         </div>
         <button class="edit-btn" onclick="openEditGame('${g.id}')" title="Edit">✏️</button>
       </div>`;
-  }).join("");
+  }).join("") + '</div>';
 }
 
 // Edit game
