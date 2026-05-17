@@ -1,0 +1,263 @@
+{
+    "games": {
+        "-OreRGNjkXUJflvmwowm": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/68448/7-wonders",
+            "maxPlayers": "7",
+            "maxTime": "40",
+            "minPlayers": "2",
+            "minTime": "30",
+            "name": "7 Wonders",
+            "owner": "Damon A"
+        },
+        "-OreRPNYl0p95A7bYRoM": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/173346/7-wonders-duel",
+            "maxPlayers": "2",
+            "maxTime": "30",
+            "minPlayers": "2",
+            "minTime": "30",
+            "name": "7 Wonders Duel",
+            "owner": "Damon A"
+        },
+        "-OreRiPTv66teuVAmVv3": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/13/catan",
+            "expansions": [
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgameexpansion/2807/catan-5-6-player-expansion",
+                    "name": "5-6 Player"
+                }
+            ],
+            "maxPlayers": "6",
+            "maxTime": "120",
+            "minPlayers": "3",
+            "minTime": "60",
+            "name": "Catan",
+            "owner": "Damon A"
+        },
+        "-OreRxjrVLd6O7zOGUJD": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/6249/alhambra",
+            "maxPlayers": "6",
+            "maxTime": "60",
+            "minPlayers": "2",
+            "minTime": "45",
+            "name": "Alhambra",
+            "owner": "Damon A"
+        },
+        "-OreS21Lp5bBPwDxHpnr": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/230802/azul",
+            "maxPlayers": "4",
+            "maxTime": "45",
+            "minPlayers": "2",
+            "minTime": "30",
+            "name": "Azul",
+            "owner": "Damon A"
+        },
+        "-OreS6qeCvM-2nIPdjjT": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/153938/camel-up",
+            "maxPlayers": "8",
+            "maxTime": "30",
+            "minPlayers": "2",
+            "minTime": "20",
+            "name": "Camel Up",
+            "owner": "Damon A"
+        },
+        "-OreSCexLOfNFdMhkjia": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/230914/carcassonne-big-box-6",
+            "maxPlayers": "6",
+            "maxTime": "60",
+            "minPlayers": "2",
+            "minTime": "35",
+            "name": "Carcassonne Big Box",
+            "owner": "Damon A"
+        },
+        "-OreSLIBbgmilwH8ScHR": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/169654/deep-sea-adventure",
+            "maxPlayers": "6",
+            "maxTime": "40",
+            "minPlayers": "2",
+            "minTime": "30",
+            "name": "Deep Sea Adventure",
+            "owner": "Damon A"
+        },
+        "-OreSaGQTSvZaEEdPGoC": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/39856/dixit",
+            "expansions": [
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgameexpansion/234553/dixit-harmonies",
+                    "name": "Harmonies"
+                },
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgameexpansion/174090/dixit-memories",
+                    "name": "Memories"
+                },
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgame/92828/dixit-odyssey",
+                    "name": "Odyssey"
+                },
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgameexpansion/205761/dixit-revelations",
+                    "name": "Revelations"
+                }
+            ],
+            "maxPlayers": "6",
+            "maxTime": "40",
+            "minPlayers": "3",
+            "minTime": "30",
+            "name": "Dixit",
+            "owner": "Damon A"
+        },
+        "-OreSmHRd8-Z-EfzUau3": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/251219/istanbul-big-box",
+            "maxPlayers": "5",
+            "maxTime": "90",
+            "minPlayers": "2",
+            "minTime": "40",
+            "name": "Istanbul: Big Box",
+            "owner": "Damon A"
+        },
+        "-OreSrXXAci9GlNlogUO": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/70323/king-of-tokyo",
+            "maxPlayers": "6",
+            "maxTime": "40",
+            "minPlayers": "2",
+            "minTime": "30",
+            "name": "King of Tokyo",
+            "owner": "Damon A"
+        },
+        "-OreSz1FDTfjCTNdeZv3": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/110327/lords-of-waterdeep",
+            "expansions": [
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgameexpansion/134342/lords-of-waterdeep-scoundrels-of-skullport",
+                    "name": "Scoundrels of Skullport"
+                }
+            ],
+            "maxPlayers": "6",
+            "maxTime": "120",
+            "minPlayers": "2",
+            "minTime": "60",
+            "name": "Lords of Waterdeep",
+            "owner": "Damon A"
+        },
+        "-OreT3F3iVzeCrSYFty-": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/139030/mascarade",
+            "maxPlayers": "13",
+            "maxTime": "30",
+            "minPlayers": "2",
+            "minTime": "30",
+            "name": "Mascarade",
+            "owner": "Damon A"
+        },
+        "-OreTC83bkirML3PpxQl": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/157969/sheriff-of-nottingham",
+            "expansions": [
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgameexpansion/226065/sheriff-of-nottingham-merry-men",
+                    "name": "Merry Men"
+                }
+            ],
+            "maxPlayers": "6",
+            "maxTime": "60",
+            "minPlayers": "3",
+            "minTime": "60",
+            "name": "Sheriff of Nottingham",
+            "owner": "Damon A"
+        },
+        "-OreTGMysALLat8K4XyM": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/40692/small-world",
+            "maxPlayers": "5",
+            "maxTime": "80",
+            "minPlayers": "2",
+            "minTime": "40",
+            "name": "Small World",
+            "owner": "Damon A"
+        },
+        "-OreTNOQNtZfkBMYVhkS": {
+            "bggUrl": "https://boardgamegeek.com/boardgame/148228/splendor",
+            "expansions": [
+                {
+                    "bggUrl": "https://boardgamegeek.com/boardgameexpansion/220653/splendor-cities-of-splendor",
+                    "name": "Cities of Splendor"
+                }
+            ],
+            "maxPlayers": "4",
+            "maxTime": "40",
+            "minPlayers": "2",
+            "minTime": "30",
+            "name": "Splendor",
+            "owner": "Damon A"
+        }
+    },
+    "sessions": {
+        "-OreUyJLjWptdDs_8mJZ": {
+            "attendees": [
+                "Damon A",
+                "Joel",
+                "Vince"
+            ],
+            "date": "2026-05-29",
+            "location": "16115 NW Fescue Ct",
+            "note": "",
+            "time": "18:00",
+            "votes": {
+                "Damon A": [
+                    "-OreSz1FDTfjCTNdeZv3",
+                    "-OreSmHRd8-Z-EfzUau3"
+                ]
+            }
+        },
+        "-OriXe96fx8Av59ejsJz": {
+            "date": "2026-06-26",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXgsOsjAn0hAx7JCm": {
+            "date": "2026-07-31",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXkHUst1geoK9uIhc": {
+            "date": "2026-08-28",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXnDBywU0ow5KvZ_6": {
+            "date": "2026-09-25",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXrY22Gv_zgBKSmvm": {
+            "date": "2026-10-30",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXuslFbCsj9rvw060": {
+            "date": "2026-11-27",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        }
+    },
+    "users": {
+        "Damon A": {
+            "browserId": "18979bd3-eb76-4c90-a8a2-16c75dbb5739",
+            "lastSeen": 1778595277658
+        },
+        "David the great": {
+            "browserId": "ae15b71e-5fbb-4d47-8076-7dd0470e0380",
+            "lastSeen": 1777784431783
+        },
+        "Joel": {
+            "browserId": "7f5b7fa4-fece-4c49-a27d-7923e07beb1d",
+            "lastSeen": 1777921552288
+        },
+        "Vince": {
+            "browserId": "583be459-5818-48d1-a1da-1fda718c979f",
+            "lastSeen": 1778802550535
+        }
+    }
+}
