@@ -190,7 +190,9 @@
     "sessions": {
         "-OreUyJLjWptdDs_8mJZ": {
             "attendees": [
-                "Damon A"
+                "Damon A",
+                "Joel",
+                "Vince"
             ],
             "date": "2026-05-29",
             "location": "16115 NW Fescue Ct",
@@ -202,16 +204,68 @@
                     "-OreSmHRd8-Z-EfzUau3"
                 ]
             }
+        },
+        "-OriXe96fx8Av59ejsJz": {
+            "attendees": [
+                "Damon A"
+            ],
+            "date": "2026-06-26",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00",
+            "votes": {
+                "Damon A": [
+                    "-OreSmHRd8-Z-EfzUau3"
+                ]
+            }
+        },
+        "-OriXgsOsjAn0hAx7JCm": {
+            "date": "2026-07-31",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXkHUst1geoK9uIhc": {
+            "date": "2026-08-28",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXnDBywU0ow5KvZ_6": {
+            "date": "2026-09-25",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXrY22Gv_zgBKSmvm": {
+            "date": "2026-10-30",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
+        },
+        "-OriXuslFbCsj9rvw060": {
+            "date": "2026-11-27",
+            "location": "TBD",
+            "note": "",
+            "time": "18:00"
         }
     },
     "users": {
         "Damon A": {
-            "browserId": "18979bd3-eb76-4c90-a8a2-16c75dbb5739",
-            "lastSeen": 1777784339761
+            "browserId": "45f29fbf-525a-4f34-b2b0-9bcb95a263c1",
+            "lastSeen": 1783784012885
         },
         "David the great": {
             "browserId": "ae15b71e-5fbb-4d47-8076-7dd0470e0380",
             "lastSeen": 1777784431783
+        },
+        "Joel": {
+            "browserId": "7f5b7fa4-fece-4c49-a27d-7923e07beb1d",
+            "lastSeen": 1777921552288
+        },
+        "Vince": {
+            "browserId": "583be459-5818-48d1-a1da-1fda718c979f",
+            "lastSeen": 1780081356382
         }
     }
 }
